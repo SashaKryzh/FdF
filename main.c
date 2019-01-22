@@ -5,101 +5,140 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: okryzhan <okryzhan@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/21 13:25:05 by okryzhan          #+#    #+#             */
-/*   Updated: 2018/11/21 13:25:06 by okryzhan         ###   ########.fr       */
+/*   Created: 2019/01/22 16:13:14 by okryzhan          #+#    #+#             */
+/*   Updated: 2019/01/22 16:13:15 by okryzhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int		key_hook(int key, void *param)
+void	add_line(t_read **read, t_cell *line)
 {
-	param = 0;
-	if (key == 53)
-		exit(0);
-	return (0);
-}
+	t_read	*new;
+	t_read	*tmp;
 
-void	 drawline(void *mlx_ptr, void *win_ptr, int x0, int y0, int x1, int y1)
-{
-    int dx, dy, p, x, y;
- 
-    dx=x1-x0;
-    dy=y1-y0;
- 
-    x=x0;
-    y=y0;
- 
-    p=2*dy-dx;
- 
-    while(x<x1)
-    {
-        if(p>=0)
-        {
-            mlx_pixel_put(mlx_ptr, win_ptr, x, y, 0xFFFFFF);
-            y=y+1;
-            p=p+2*dy-2*dx;
-        }
-        else
-        {
-            mlx_pixel_put(mlx_ptr, win_ptr, x, y, 0xFFFFFF);
-            p=p+2*dy;
-        }
-        x=x+1;
-    }
-}
-
-void	draw_line(void *mlx_ptr, void *win_ptr, int x0, int y0, int x1, int y1)
-{
-	int		steep;
-	int		dx;
-	int		dy;
-	int		p;
-
-	steep = FALSE;
-	if (ft_abs(x0 - x1) < ft_abs(y0 - y1))
+	new = (t_read *)ft_memalloc(sizeof(t_read));
+	new->l = line;
+	if (!*read)
+		*read = new;
+	else
 	{
-		steep = TRUE;
-		ft_swap(&x0, &y0);
-		ft_swap(&x1, &y1);
-		printf("1\n");
-	}
-	if (x0 > x1)
-	{
-		ft_swap(&x0, &x1);
-		ft_swap(&y0, &y1);
-		printf("2\n");
-	}
-	dx = x1 - x0;
-	dy = y1 - y0;
-	p = (2 * dy) - dx;
-	printf("%d %d %d\n", dx, dy, p);
-	while (x0 <= x1)
-	{
-		if (!steep)
-			mlx_pixel_put(mlx_ptr, win_ptr, x0, y0, 0xFFFFFF);
-		else
-			mlx_pixel_put(mlx_ptr, win_ptr, y0, x0, 0xFFFFFF);
-        p = p + (2 * dy) - (2 * dx);
-		if (p >= 0)
-    		y0 += y1 >= y0 ? 1 : -1;
-		else
-        	p = p + (2 * dx);
-    	x0 += 1;
+		tmp = *read;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = new;
 	}
 }
 
-int		main(void)
+int		line_width(char **token)
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
+	int i;
 
-	mlx_ptr = mlx_init();
-	win_ptr = mlx_new_window(mlx_ptr, 500, 500, "test");
-	draw_line(mlx_ptr, win_ptr, 0, 0, 500, 500);
-	draw_line(mlx_ptr, win_ptr, 250, 0, 250, 500);
-	draw_line(mlx_ptr, win_ptr, 0, 500, 500, 0);
-	mlx_key_hook(win_ptr, key_hook, (void *)0);
-	mlx_loop(mlx_ptr);
+	i = 0;
+	while (token[i])
+		i++;
+	return (i);
+}
+
+t_cell	*manage_line(t_map *map, char *l)
+{
+	char		**token;
+	t_cell		*line;
+	int			i;
+
+	token = ft_strsplit(l, ' ');
+	free(l);
+	map->w = !map->w ? line_width(token) : map->w;
+	line = (t_cell *)ft_memalloc(sizeof(t_cell) * map->w);
+	i = 0;
+	while (token[i] && i < map->w)
+	{
+		line[i].x = i;
+		line[i].y = map->h;
+		line[i].z = ft_atoi(token[i]);
+		i++;
+	}
+	return (line);
+}
+
+void	convert_map(t_map *map, t_read *read)
+{
+	t_read	*tmp;
+	int		i;
+
+	map->map = (t_cell **)ft_memalloc(sizeof(t_cell *) * map->h);
+	i = 0;
+	while (i < map->h)
+	{
+		map->map[i] = read->l;
+		tmp = read;
+		read = read->next;
+		free(tmp);
+		i++;
+	}
+}
+
+void	parse_map(t_map *map, char *file)
+{
+	t_read	*read;
+	char	*line;
+	int		fd;
+	int		ret;
+
+	if ((fd = open(file, O_RDONLY)) < 0)
+		exit(1);
+	read = NULL;
+	while ((ret = get_next_line(fd, &line)) > 0)
+	{
+		add_line(&read, manage_line(map, line));
+		map->h += 1;
+	}
+	if (ret < 0 || close(fd) < 0)
+		exit(1);
+	convert_map(map, read);
+}
+
+void	get_map(t_map *map, int ac, char *av[])
+{
+	char	*s;
+
+	if (ac == 2)
+	{
+		if (!(s = ft_strrchr(av[1], '.')))
+			exit(1);
+		if (!ft_strequ(s, ".fdf"))
+			exit(1);
+		parse_map(map, av[1]);
+	}
+}
+
+void	print_map(t_map *map)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < map->h)
+	{
+		j = 0;
+		while (j < map->w)
+		{
+			ft_printf("%3d ", map->map[i][j].z);
+			j++;
+		}
+		ft_printf("\n");
+		i++;
+	}
+}
+
+int		main(int ac, char *av[])
+{
+	t_map	map;
+
+	map.w = 0;
+	map.h = 0;
+	get_map(&map, ac, av);
+	print_map(&map);
+	system("leaks fdf");
 	return (0);
 }

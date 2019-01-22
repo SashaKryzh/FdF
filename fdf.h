@@ -13,20 +13,37 @@
 #ifndef FDF_H
 # define FDF_H
 
-# include "libft.h"
-# include "get_next_line.h"
-# include "mlx.h"
+# include <fcntl.h>
 # include <math.h>
-# include <stdio.h>
+# include "mlx.h"
+
+# include "libft.h"
 
 # define TRUE 1
 # define FALSE 0
 
+typedef struct		s_cell
+{
+	int				x;
+	int				y;
+	int				z;
+}					t_cell;
+
+typedef struct		s_map
+{
+	t_cell			**map;
+	int				w;
+	int				h;
+}					t_map;
+
+typedef struct		s_read
+{
+	t_cell			*l;
+	struct s_read	*next;
+}					t_read;
+
 /*
 ** Tests
 */
-
-int		**test_map(void);
-void	test_print(int **map);
 
 #endif

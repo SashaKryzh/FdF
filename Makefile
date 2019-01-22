@@ -11,30 +11,45 @@
 #******************************************************************************#
 
 NAME = fdf
+
 FLAGS = -Wall -Wextra -Werror
 CC = gcc
-MLX_HEAD = -I /usr/local/include
+
+MLX_HEAD = /usr/local/include
 MLX_SRCS = -L /usr/local/lib -lmlx -framework OpenGL -framework AppKit
-LIB_HEAD = -I.
-LIB_SRCS = -L. -lft
-SRCS = main.c \
-tests.c
 
-OBJS = $(SRCS:.c=.o)
+LIB_D = libft
+LIB_HEAD = $(LIB_D)/includes
+LIB_SRCS = -L $(LIB_D) -lft
+LIBFT = $(addprefix $(LIB_D)/, libft.a)
 
-all: $(NAME)
+INCLS = -I $(MLX_HEAD) -I $(LIB_HEAD)
+
+SRCS = main.c
+
+OBJS_D = ./objs
+OBJS = $(addprefix $(OBJS_D)/, $(SRCS:.c=.o))
+
+all: $(OBJS_D) $(LIBFT) $(NAME)
+
+$(LIBFT):
+	@$(MAKE) all -C $(LIB_D)
+
+$(OBJS_D): 
+	mkdir -p $(OBJS_D)
 
 $(NAME): $(OBJS)
-	$(CC) $(FLAGS) -o $(NAME) $(SRCS) $(MLX_SRCS) $(LIB_SRCS)
+	$(CC) -o $(NAME) $(SRCS) $(MLX_SRCS) $(LIB_SRCS) $(INCLS)
 
-%.o: %.c
-	$(CC) $(FLAGS) -o $@ -c $< $(MLX_HEAD) $(LIB_HEAD)
+$(OBJS_D)/%.o: %.c *.h libft/includes/*.h
+	$(CC) -o $@ -c $< $(INCLS)
 
 clean:
-	rm -f $(OBJS)
+	@rm -rf $(OBJS_D)
 
 fclean: clean
-	rm -f $(NAME)
+	@$(MAKE) fclean -C $(LIB_D)
+	@rm -rf $(NAME)
 
 re: fclean all
 
