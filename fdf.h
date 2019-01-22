@@ -15,12 +15,15 @@
 
 # include <fcntl.h>
 # include <math.h>
+# include <stdbool.h>
 # include "mlx.h"
 
 # include "libft.h"
 
-# define TRUE 1
-# define FALSE 0
+# define FILE_ERROR "Invalid file"
+# define OPEN_ERROR "File open error"
+# define READ_ERROR "Read error"
+# define CLOSE_ERROR "Close error"
 
 typedef struct		s_cell
 {
@@ -42,8 +45,19 @@ typedef struct		s_read
 	struct s_read	*next;
 }					t_read;
 
+void		get_map(t_map *map, int ac, char *av[]);
+
 /*
-** Tests
+**	Utils
 */
+
+void		exit_func(char *msg);
+int			line_width(char **token);
+
+/*
+**	Tests
+*/
+
+void		print_map(t_map *map);
 
 #endif

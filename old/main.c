@@ -96,7 +96,7 @@ int		main(void)
 
 	mlx_ptr = mlx_init();
 	win_ptr = mlx_new_window(mlx_ptr, 500, 500, "test");
-	draw_line(mlx_ptr, win_ptr, 0, 0, 500, 500);
+	draw_line(mlx_ptr, win_ptr, 500, 500, 0, 0);
 	draw_line(mlx_ptr, win_ptr, 250, 0, 250, 500);
 	draw_line(mlx_ptr, win_ptr, 0, 500, 500, 0);
 	mlx_key_hook(win_ptr, key_hook, (void *)0);
