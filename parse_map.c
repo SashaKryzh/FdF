@@ -102,7 +102,6 @@ void		parse_map(t_map *map, char *file)
 	int		ret;
 
 	read = NULL;
-	ft_bzero(map, sizeof(t_map));
 	if ((fd = open(file, O_RDONLY)) < 0)
 		exit_func(OPEN_ERROR);
 	map->filename = ft_strdup(file);

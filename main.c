@@ -61,7 +61,6 @@ void	draw_line(t_map *fdf, t_cell p1, t_cell p2)
 	dy = p2.y - p1.y;
 	derror = ft_abs(dy) * 2;
 	error = 0;
-	ft_printf("(%d %d) (%d %d)\n", p1.x, p1.y, p2.x, p2.y);
 	while (p1.x < p2.x)
 	{
 		if (!steep)
@@ -89,7 +88,6 @@ void	draw_grid(t_map *fdf, t_cell **img)
 		j = 0;
 		while (j < fdf->w - 1)
 		{
-			ft_printf("(%d %d) (%d %d)\n", img[i][j].x, img[i][j].y, img[i][j + 1].x, img[i][j + 1].y);
 			draw_line(fdf, img[i][j], img[i][j + 1]);
 			j++;
 		}
@@ -101,7 +99,6 @@ void	draw_grid(t_map *fdf, t_cell **img)
 		j = 0;
 		while (j < fdf->w)
 		{
-			ft_printf("(%d %d) (%d %d)\n", img[i][j].x, img[i][j].y, img[i + 1][j].x, img[i + 1][j].y);
 			draw_line(fdf, img[i][j], img[i + 1][j]);
 			j++;
 		}
