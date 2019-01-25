@@ -23,7 +23,10 @@ void	print_map(t_map *map)
 		j = 0;
 		while (j < map->w)
 		{
-			ft_printf("%3d ", map->map[i][j].z);
+			ft_printf("%d", map->map[i][j].z);
+			if (map->map[i][j].color)
+				ft_printf(",0x%X", map->map[i][j].color);
+			write(1, " ", 1);
 			j++;
 		}
 		ft_printf("\n");

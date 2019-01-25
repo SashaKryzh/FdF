@@ -30,6 +30,20 @@ void		add_line(t_read **read, t_cell *line)
 	}
 }
 
+void		manage_color(t_cell *line, char **token, int i)
+{
+	char **tab;
+
+	tab = ft_strsplit(token[i], ',');
+	if (line_width(tab) != 2)
+		exit_func(COLOR_ERROR);
+	if (!ft_strnequ(tab[1], "0x", 2))
+		exit_func(COLOR_ERROR);
+	line[i].color = ft_atoi_hex(&tab[1][2]);
+	if (line[i].color == 0 && tab[1][3] != '0')
+		exit_func(COLOR_ERROR);
+}
+
 t_cell		*manage_line(t_map *map, char *ln)
 {
 	char		**token;
@@ -41,14 +55,18 @@ t_cell		*manage_line(t_map *map, char *ln)
 	map->w = !map->w ? line_width(token) : map->w;
 	line = (t_cell *)ft_memalloc(sizeof(t_cell) * map->w);
 	i = 0;
-	while (token[i] && i < map->w)
+	while (map->w && token[i] && i < map->w)
 	{
 		line[i].x = i;
 		line[i].y = map->h;
 		line[i].z = ft_atoi(token[i]);
+		if (ft_strchr(token[i], ','))
+			manage_color(line, token, i);
 		free(token[i]);
 		i++;
 	}
+	if (!map->w || i < map->w)
+		exit_func(MAP_ERROR);
 	free(token);
 	return (line);
 }
@@ -81,6 +99,7 @@ void		parse_map(t_map *map, char *file)
 	ft_bzero(map, sizeof(t_map));
 	if ((fd = open(file, O_RDONLY)) < 0)
 		exit_func(OPEN_ERROR);
+	map->filename = ft_strdup(file);
 	while ((ret = get_next_line(fd, &line)) > 0)
 	{
 		add_line(&read, manage_line(map, line));

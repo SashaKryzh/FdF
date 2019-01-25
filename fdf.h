@@ -25,11 +25,19 @@
 # define READ_ERROR "Read error"
 # define CLOSE_ERROR "Close error"
 
+# define MAP_ERROR "Map error"
+# define COLOR_ERROR "Color error"
+
+# define WIN_WIDTH 1920
+# define WIN_HEIGHT 1080
+# define SEGM (WIN_HEIGHT / (fdf->w > fdf->h ? fdf->w : fdf->h) / 2)
+
 typedef struct		s_cell
 {
 	int				x;
 	int				y;
 	int				z;
+	int				color;
 }					t_cell;
 
 typedef struct		s_map
@@ -37,6 +45,11 @@ typedef struct		s_map
 	t_cell			**map;
 	int				w;
 	int				h;
+
+	void			*mlx_ptr;
+	void			*win_ptr;
+
+	char			*filename;
 }					t_map;
 
 typedef struct		s_read
@@ -52,6 +65,7 @@ void		get_map(t_map *map, int ac, char *av[]);
 */
 
 void		exit_func(char *msg);
+int			ft_atoi_hex(char *s);
 int			line_width(char **token);
 
 /*
