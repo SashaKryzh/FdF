@@ -57,8 +57,6 @@ t_cell		*manage_line(t_map *map, char *ln)
 	i = 0;
 	while (map->w && token[i] && i < map->w)
 	{
-		line[i].x = i;
-		line[i].y = map->h;
 		line[i].z = ft_atoi(token[i]);
 		if (ft_strchr(token[i], ','))
 			manage_color(line, token, i);
@@ -75,12 +73,20 @@ void		convert_map(t_map *map, t_read *read)
 {
 	t_read	*tmp;
 	int		i;
+	int		j;
 
 	map->map = (t_cell **)ft_memalloc(sizeof(t_cell *) * map->h);
 	i = 0;
 	while (i < map->h)
 	{
 		map->map[i] = read->l;
+		j = 0;
+		while (j < map->w)
+		{
+			map->map[i][j].x = j;
+			map->map[i][j].y = i;
+			j++;
+		}
 		tmp = read;
 		read = read->next;
 		free(tmp);

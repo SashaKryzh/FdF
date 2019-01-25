@@ -28,6 +28,7 @@ INCLS = -I $(MLX_HEAD) -I $(LIB_HEAD)
 SRCS =	main.c \
 		parse_map.c \
 		utils.c \
+		rotation.c \
 		tests.c
 
 OBJS_D = ./objs

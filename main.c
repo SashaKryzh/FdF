@@ -20,13 +20,24 @@ void	exit_func(char *msg)
 
 int		key_hook(int key, void *param)
 {
-	param = 0;
+	t_map *fdf;
+
+	fdf = (t_map *)param;
 	if (key == 53)
 		exit(0);
+	if (key == 13 || key == 126 || key == 1 || key == 125)
+		fdf->ox += key == 1 || key == 125 ? -0.2 : 0.2;
+	else if (key == 0 || key == 123 || key == 2 || key == 124)
+		fdf->oy += key == 0 || key == 123 ? 0.1 : -0.1;
+	else if (key == 27 || key == 78 || key == 24 || key == 69)
+		fdf->zoom += key == 27 || key == 78 ? -0.1 : 0.1;
+	else if (key >= 83 && key <= 92)
+		fdf->depth = 1 + 0.1 * key - 83;
+	rotation(fdf);
 	return (0);
 }
 
-void	draw_line(void *mlx_ptr, void *win_ptr, t_cell p1, t_cell p2, int segm)
+void	draw_line(t_map *fdf, t_cell p1, t_cell p2)
 {
 	bool	steep;
 	int		dx;
@@ -35,10 +46,6 @@ void	draw_line(void *mlx_ptr, void *win_ptr, t_cell p1, t_cell p2, int segm)
 	int		error;
 
 	steep = false;
-	p1.x *= segm;
-	p1.y *= segm;
-	p2.x *= segm;
-	p2.y *= segm;
 	if (ft_abs(p1.x - p2.x) < ft_abs(p1.y - p2.y))
 	{
 		ft_swap(&p1.x, &p1.y);
@@ -58,9 +65,9 @@ void	draw_line(void *mlx_ptr, void *win_ptr, t_cell p1, t_cell p2, int segm)
 	while (p1.x < p2.x)
 	{
 		if (!steep)
-			mlx_pixel_put(mlx_ptr, win_ptr, p1.x + 10, p1.y + 10, 0xFFFFFF);
+			mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, p1.x + WIN_WIDTH / 2, p1.y + WIN_HEIGHT / 2, 0xFFFFFF);
 		else
-			mlx_pixel_put(mlx_ptr, win_ptr, p1.y + 10, p1.x + 10, 0xFFFFFF);
+			mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, p1.y + WIN_WIDTH / 2, p1.x + WIN_HEIGHT / 2, 0xFFFFFF);
 		error += derror;
 		if (error > dx)
 		{
@@ -71,7 +78,7 @@ void	draw_line(void *mlx_ptr, void *win_ptr, t_cell p1, t_cell p2, int segm)
 	}
 }
 
-void	draw_grid(t_map *fdf)
+void	draw_grid(t_map *fdf, t_cell **img)
 {
 	int i;
 	int	j;
@@ -82,8 +89,8 @@ void	draw_grid(t_map *fdf)
 		j = 0;
 		while (j < fdf->w - 1)
 		{
-			ft_printf("(%d %d) (%d %d)\n", fdf->map[i][j].x, fdf->map[i][j].y, fdf->map[i][j + 1].x, fdf->map[i][j + 1].y);
-			draw_line(fdf->mlx_ptr, fdf->win_ptr, fdf->map[i][j], fdf->map[i][j + 1], SEGM);
+			ft_printf("(%d %d) (%d %d)\n", img[i][j].x, img[i][j].y, img[i][j + 1].x, img[i][j + 1].y);
+			draw_line(fdf, img[i][j], img[i][j + 1]);
 			j++;
 		}
 		i++;
@@ -94,20 +101,41 @@ void	draw_grid(t_map *fdf)
 		j = 0;
 		while (j < fdf->w)
 		{
-			ft_printf("(%d %d) (%d %d)\n", fdf->map[i][j].x, fdf->map[i][j].y, fdf->map[i + 1][j].x, fdf->map[i + 1][j].y);
-			draw_line(fdf->mlx_ptr, fdf->win_ptr, fdf->map[i][j], fdf->map[i + 1][j], SEGM);
+			ft_printf("(%d %d) (%d %d)\n", img[i][j].x, img[i][j].y, img[i + 1][j].x, img[i + 1][j].y);
+			draw_line(fdf, img[i][j], img[i + 1][j]);
 			j++;
 		}
 		i++;
 	}
 }
 
+void	rotation(t_map *fdf)
+{
+	t_cell	**img;
+	int		i;
+
+	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
+	img = (t_cell **)ft_memalloc(sizeof(t_cell *) * fdf->h);
+	i = 0;
+	while (i < fdf->h)
+	{
+		img[i] = (t_cell *)ft_memalloc(sizeof(t_cell) * fdf->w);
+		ft_memcpy(img[i], fdf->map[i], sizeof(t_cell) * fdf->w);
+		zoom(fdf, img[i], i, fdf->zoom);
+		rot_x(fdf, img[i], fdf->ox);
+		rot_y(fdf, img[i], fdf->oy);
+		rot_z(fdf, img[i], fdf->oz);
+		i++;
+	}
+	draw_grid(fdf, img);
+}
+
 void	magic(t_map *fdf)
 {
 	fdf->mlx_ptr = mlx_init();
 	fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, fdf->filename);
-	draw_grid(fdf);
-	mlx_key_hook(fdf->win_ptr, key_hook, (void *)0);
+	iso(fdf);
+	mlx_key_hook(fdf->win_ptr, key_hook, (void *)fdf);
 	mlx_loop(fdf->mlx_ptr);
 }
 
@@ -115,6 +143,9 @@ int		main(int ac, char *av[])
 {
 	t_map	fdf;
 
+	ft_bzero(&fdf, sizeof(t_map));
+	fdf.zoom = 1;
+	fdf.depth = 1;
 	get_map(&fdf, ac, av);
 	// print_map(&fdf); //
 	magic(&fdf);

@@ -49,6 +49,13 @@ typedef struct		s_map
 	void			*mlx_ptr;
 	void			*win_ptr;
 
+	t_cell			**img;
+	float			ox;
+	float			oy;
+	float			oz;
+	float			zoom;
+	float			depth;
+
 	char			*filename;
 }					t_map;
 
@@ -59,6 +66,20 @@ typedef struct		s_read
 }					t_read;
 
 void		get_map(t_map *map, int ac, char *av[]);
+
+void		draw_grid(t_map *fdf, t_cell **img);
+
+void		rotation(t_map *fdf);
+
+/*
+**	Rotations
+*/
+
+void		zoom(t_map *fdf, t_cell *img, int row, float zoom);
+void		rot_x(t_map *fdf, t_cell *img, double angl);
+void		rot_y(t_map *fdf, t_cell *img, double angl);
+void		rot_z(t_map *fdf, t_cell *img, double angl);
+void		iso(t_map *fdf);
 
 /*
 **	Utils
