@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-void	zoom(t_map *fdf, t_cell *img, int row, float zoom)
+void	zoom(t_map *fdf, t_cell *img, int row, double zoom)
 {
 	float	mult;
 	int		i;

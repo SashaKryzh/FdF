@@ -28,8 +28,8 @@
 # define MAP_ERROR "Map error"
 # define COLOR_ERROR "Color error"
 
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
+# define WIN_WIDTH 700
+# define WIN_HEIGHT 700
 # define SEGM (WIN_HEIGHT / (fdf->w > fdf->h ? fdf->w : fdf->h) / 2)
 
 typedef struct		s_cell
@@ -50,11 +50,11 @@ typedef struct		s_map
 	void			*win_ptr;
 
 	t_cell			**img;
-	float			ox;
-	float			oy;
-	float			oz;
-	float			zoom;
-	float			depth;
+	double			zoom;
+	double			depth;
+	double			ox;
+	double			oy;
+	double			oz;
 
 	char			*filename;
 }					t_map;
@@ -67,15 +67,20 @@ typedef struct		s_read
 
 void		get_map(t_map *map, int ac, char *av[]);
 
-void		draw_grid(t_map *fdf, t_cell **img);
+/*
+**	Draw
+*/
 
-void		rotation(t_map *fdf);
+void		draw_line(t_map *fdf, t_cell p1, t_cell p2);
+void		draw_grid(t_map *fdf, t_cell **img);
 
 /*
 **	Rotations
 */
 
-void		zoom(t_map *fdf, t_cell *img, int row, float zoom);
+void		rotation(t_map *fdf);
+
+void		zoom(t_map *fdf, t_cell *img, int row, double zoom);
 void		rot_x(t_map *fdf, t_cell *img, double angl);
 void		rot_y(t_map *fdf, t_cell *img, double angl);
 void		rot_z(t_map *fdf, t_cell *img, double angl);
@@ -93,6 +98,7 @@ int			line_width(char **token);
 **	Tests
 */
 
-void		print_map(t_map *map);
+void		print_map(t_map *fdf, t_cell **map);
+void		print_rotation_info(t_map *fdf);
 
 #endif

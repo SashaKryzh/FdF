@@ -23,58 +23,31 @@ int		key_hook(int key, void *param)
 	t_map *fdf;
 
 	fdf = (t_map *)param;
-	if (key == 53)
+	if (key == 53 || key == 12)
+	{
+		// system("leaks fdf");
 		exit(0);
+	}
 	if (key == 13 || key == 126 || key == 1 || key == 125)
-		fdf->ox += key == 1 || key == 125 ? -0.2 : 0.2;
+		fdf->ox += key == 1 || key == 125 ? -0.1 : 0.1;
 	else if (key == 0 || key == 123 || key == 2 || key == 124)
 		fdf->oy += key == 0 || key == 123 ? 0.1 : -0.1;
 	else if (key == 27 || key == 78 || key == 24 || key == 69)
 		fdf->zoom += key == 27 || key == 78 ? -0.1 : 0.1;
-	else if (key >= 83 && key <= 92)
-		fdf->depth = 1 + 0.1 * key - 83;
+	else if (key >= 82 && key <= 92)
+		fdf->depth = key - 82;
+	else if (key == 15)
+	{
+		fdf->ox = 0;
+		fdf->oy = 0;
+	}
+	else if (key == 34) // I
+	{
+		iso(fdf);
+		return (0);
+	}
 	rotation(fdf);
 	return (0);
-}
-
-void	draw_line(t_map *fdf, t_cell p1, t_cell p2)
-{
-	bool	steep;
-	int		dx;
-	int		dy;
-	int		derror;
-	int		error;
-
-	steep = false;
-	if (ft_abs(p1.x - p2.x) < ft_abs(p1.y - p2.y))
-	{
-		ft_swap(&p1.x, &p1.y);
-		ft_swap(&p2.x, &p2.y);
-		steep = true;
-	}
-	if (p1.x > p2.x)
-	{
-		ft_swap(&p1.x, &p2.x);
-		ft_swap(&p1.y, &p2.y);
-	}
-	dx = p2.x - p1.x;
-	dy = p2.y - p1.y;
-	derror = ft_abs(dy) * 2;
-	error = 0;
-	while (p1.x < p2.x)
-	{
-		if (!steep)
-			mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, p1.x + WIN_WIDTH / 2, p1.y + WIN_HEIGHT / 2, 0xFFFFFF);
-		else
-			mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, p1.y + WIN_WIDTH / 2, p1.x + WIN_HEIGHT / 2, 0xFFFFFF);
-		error += derror;
-		if (error > dx)
-		{
-			p1.y += p2.y > p1.y ? 1 : -1;
-			error -= dx * 2; 
-		}
-		p1.x++;
-	}
 }
 
 void	draw_grid(t_map *fdf, t_cell **img)
@@ -113,6 +86,7 @@ void	rotation(t_map *fdf)
 
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
 	img = (t_cell **)ft_memalloc(sizeof(t_cell *) * fdf->h);
+	print_rotation_info(fdf);
 	i = 0;
 	while (i < fdf->h)
 	{
@@ -124,6 +98,7 @@ void	rotation(t_map *fdf)
 		rot_z(fdf, img[i], fdf->oz);
 		i++;
 	}
+	// print_map(fdf, img);
 	draw_grid(fdf, img);
 }
 
@@ -131,7 +106,7 @@ void	magic(t_map *fdf)
 {
 	fdf->mlx_ptr = mlx_init();
 	fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, fdf->filename);
-	iso(fdf);
+	rotation(fdf);
 	mlx_key_hook(fdf->win_ptr, key_hook, (void *)fdf);
 	mlx_loop(fdf->mlx_ptr);
 }
