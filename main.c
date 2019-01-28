@@ -29,9 +29,12 @@ int		key_hook(int key, void *param)
 		exit(0);
 	}
 	if (key == 13 || key == 126 || key == 1 || key == 125)
-		fdf->ox += key == 1 || key == 125 ? -0.1 : 0.1;
+		fdf->ox += key == 1 || key == 125 ? 0.1 : -0.1;
 	else if (key == 0 || key == 123 || key == 2 || key == 124)
-		fdf->oy += key == 0 || key == 123 ? 0.1 : -0.1;
+	{
+		fdf->oy += key == 0 || key == 123 ? -0.1 : 0.1;
+		// fdf->oz += key == 0 || key == 123 ? 0.1 : -0.1;
+	}
 	else if (key == 27 || key == 78 || key == 24 || key == 69)
 		fdf->zoom += key == 27 || key == 78 ? -0.1 : 0.1;
 	else if (key >= 82 && key <= 92)
@@ -40,6 +43,7 @@ int		key_hook(int key, void *param)
 	{
 		fdf->ox = 0;
 		fdf->oy = 0;
+		fdf->oz = 0;
 	}
 	else if (key == 34) // I
 	{
@@ -107,7 +111,8 @@ void	magic(t_map *fdf)
 	fdf->mlx_ptr = mlx_init();
 	fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, fdf->filename);
 	rotation(fdf);
-	mlx_key_hook(fdf->win_ptr, key_hook, (void *)fdf);
+	// mlx_key_hook(fdf->win_ptr, key_hook, (void *)fdf);
+	mlx_hook(fdf->win_ptr, 2, 5, key_hook, (void *)fdf);
 	mlx_loop(fdf->mlx_ptr);
 }
 

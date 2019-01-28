@@ -34,25 +34,68 @@ void	draw_line(t_map *fdf, t_cell p1, t_cell p2)
 	int		dy;
 	int		derror;
 	int		error;
+	t_cell	cur;
 
 	steep = false;
 	check_direction(&steep, &p1, &p2);
-	dx = p2.x - p1.x;
-	dy = p2.y - p1.y;
+	cur = p1;
+	dx = p2.x - cur.x;
+	dy = p2.y - cur.y;
 	derror = ft_abs(dy) * 2;
 	error = 0;
-	while (p1.x < p2.x)
+	while (cur.x < p2.x)
 	{
+		get_color(&cur, &p1, &p2, dx > dy);
 		if (!steep)
-			mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, p1.x + WIN_WIDTH / 2, p1.y + WIN_HEIGHT / 2, 0xFFFFFF);
+			mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, cur.x + WIN_WIDTH / 2, cur.y + WIN_HEIGHT / 2, cur.color);
 		else
-			mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, p1.y + WIN_WIDTH / 2, p1.x + WIN_HEIGHT / 2, 0xFFFFFF);
+			mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, cur.y + WIN_WIDTH / 2, cur.x + WIN_HEIGHT / 2, cur.color);
 		error += derror;
 		if (error > dx)
 		{
-			p1.y += p2.y > p1.y ? 1 : -1;
+			cur.y += p2.y > cur.y ? 1 : -1;
 			error -= dx * 2; 
 		}
-		p1.x++;
+		cur.x++;
+	}
+}
+
+double	get_percentage(int start, int end, int cur)
+{
+	double place;
+	double dist;
+
+	place = cur - start;
+	dist = end - start;
+	return (dist == 0 ? 1.0 : (place / dist));
+}
+
+int			get_light(int start, int end, double percentage)
+{
+	return ((int)((1 - percentage) * start + percentage * end));
+}
+void		get_color(t_cell *cur, t_cell *start, t_cell *end, int delta)
+{
+	double	per;
+	int		r;
+	int		g;
+	int		b;
+
+	if (cur->color == end->color)
+		return ;
+	if (delta)
+		per = get_percentage(start->x, end->x, cur->x);
+	else
+		per = get_percentage(start->y, end->y, cur->y);
+	r = get_light((start->color >> 16) & 0xFF, (end->color >> 16) & 0xFF, per);
+    g = get_light((start->color >> 8) & 0xFF, (end->color >> 8) & 0xFF, per);
+    b = get_light(start->color & 0xFF, end->color & 0xFF, per);
+	cur->color = (r << 16) | (g << 8) | b;
+	if (!cur->color)
+	{
+		printf("0x%X\n", cur->color);
+		printf("0x%X 0x%X\n", start->color, end->color);
+		
+		// printf("0x%X\n", cur->color);
 	}
 }

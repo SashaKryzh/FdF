@@ -85,6 +85,8 @@ void		convert_map(t_map *map, t_read *read)
 		{
 			map->map[i][j].x = j;
 			map->map[i][j].y = i;
+			if (!map->map[i][j].color)
+				map->map[i][j].color = 0xFFFFFF;
 			j++;
 		}
 		tmp = read;
@@ -126,5 +128,10 @@ void		get_map(t_map *map, int ac, char *av[])
 		if (!ft_strequ(s, ".fdf"))
 			exit_func(FILE_ERROR);
 		parse_map(map, av[1]);
+	}
+	else
+	{
+		ft_printf("Usage : ./fdf <filename>\n");
+		exit(0);
 	}
 }

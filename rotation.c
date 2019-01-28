@@ -14,16 +14,16 @@
 
 void	zoom(t_map *fdf, t_cell *img, int row, double zoom)
 {
-	float	mult;
+	double	mult;
 	int		i;
 
 	mult = 35 * zoom;
 	i = 0;
 	while (i < fdf->w)
 	{
+		img[i].x = img[i].x * mult - (fdf->w - 1) * mult / 2;
+		img[i].y = img[i].y * mult - (fdf->h - 1) * mult / 2;
 		img[i].z = img[i].z * fdf->depth;
-		img[i].y = img[i].y * mult - fdf->h / 2 * mult;
-		img[i].x = img[i].x * mult - fdf->w / 2 * mult;
 		i++;
 	}
 }
@@ -31,12 +31,14 @@ void	zoom(t_map *fdf, t_cell *img, int row, double zoom)
 void	rot_x(t_map *fdf, t_cell *img, double angl)
 {
 	int		i;
+	int		tmp;
 
 	i = 0;
 	while (i < fdf->w)
 	{
+		tmp = img[i].y;
 		img[i].y = img[i].y * cos(angl) + img[i].z * sin(angl);
-		img[i].z = -1 * img[i].y * sin(angl) + img[i].z * cos(angl);
+		img[i].z = -1 * tmp * sin(angl) + img[i].z * cos(angl);
 		i++;
 	}
 }
@@ -44,12 +46,14 @@ void	rot_x(t_map *fdf, t_cell *img, double angl)
 void	rot_y(t_map *fdf, t_cell *img, double angl)
 {
 	int		i;
+	int		tmp;
 
 	i = 0;
 	while (i < fdf->w)
 	{
+		tmp = img[i].x;
 		img[i].x = img[i].x * cos(angl) + img[i].z * sin(angl);
-		img[i].z = -1 * img[i].x * sin(angl) + img[i].z * cos(angl);
+		img[i].z = -1 * tmp * sin(angl) + img[i].z * cos(angl);
 		i++;
 	}
 }
@@ -57,13 +61,14 @@ void	rot_y(t_map *fdf, t_cell *img, double angl)
 void	rot_z(t_map *fdf, t_cell *img, double angl)
 {
 	int		i;
-	int		j;
+	int		tmp;
 
 	i = 0;
 	while (i < fdf->w)
 	{
+		tmp = img[i].x;
 		img[i].x = img[i].x * cos(angl) - img[i].y * sin(angl);
-		img[i].y = img[i].x * sin(angl) + img[i].y * cos(angl);
+		img[i].y = tmp * sin(angl) + img[i].y * cos(angl);
 		i++;
 	}
 }

@@ -74,6 +74,8 @@ void		get_map(t_map *map, int ac, char *av[]);
 void		draw_line(t_map *fdf, t_cell p1, t_cell p2);
 void		draw_grid(t_map *fdf, t_cell **img);
 
+void		get_color(t_cell *cur, t_cell *start, t_cell *end, int delta);
+
 /*
 **	Rotations
 */
