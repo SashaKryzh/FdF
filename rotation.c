@@ -12,28 +12,34 @@
 
 #include "fdf.h"
 
-void	zoom(t_map *fdf, t_cell *img, int row, double zoom)
+void	zoom(t_map *fdf, t_cell *img)
 {
-	double	mult;
+	// double	zoom;
+	int		segm;
 	int		i;
 
-	mult = 35 * zoom;
+	if (fdf->zoom > 0)
+		segm = 35 * fdf->zoom;
+	else
+		segm = 35 / (fdf->zoom * -1);
 	i = 0;
 	while (i < fdf->w)
 	{
-		img[i].x = img[i].x * mult - (fdf->w - 1) * mult / 2;
-		img[i].y = img[i].y * mult - (fdf->h - 1) * mult / 2;
+		img[i].x = img[i].x * segm - (fdf->w - 1) * segm / 2;
+		img[i].y = img[i].y * segm - (fdf->h - 1) * segm / 2;
 		img[i].z = img[i].z * fdf->depth;
 		i++;
 	}
 }
 
-void	rot_x(t_map *fdf, t_cell *img, double angl)
+void	rot_x(t_map *fdf, t_cell *img)
 {
+	double	angl;
 	int		i;
 	int		tmp;
 
 	i = 0;
+	angl = (double)fdf->ox / (double)10;
 	while (i < fdf->w)
 	{
 		tmp = img[i].y;
@@ -43,12 +49,14 @@ void	rot_x(t_map *fdf, t_cell *img, double angl)
 	}
 }
 
-void	rot_y(t_map *fdf, t_cell *img, double angl)
+void	rot_y(t_map *fdf, t_cell *img)
 {
+	double	angl;
 	int		i;
 	int		tmp;
 
 	i = 0;
+	angl = (double)fdf->oy / (double)10;
 	while (i < fdf->w)
 	{
 		tmp = img[i].x;
@@ -58,12 +66,14 @@ void	rot_y(t_map *fdf, t_cell *img, double angl)
 	}
 }
 
-void	rot_z(t_map *fdf, t_cell *img, double angl)
+void	rot_z(t_map *fdf, t_cell *img)
 {
+	double	angl;
 	int		i;
 	int		tmp;
 
 	i = 0;
+	angl = (double)fdf->oz / (double)10;
 	while (i < fdf->w)
 	{
 		tmp = img[i].x;
@@ -81,14 +91,13 @@ void	iso(t_map *fdf)
 	int		prev_x;
 	int		prev_y;
 
-	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
 	img = (t_cell **)ft_memalloc(sizeof(t_cell *) * fdf->h);
 	i = 0;
 	while (i < fdf->h)
 	{
 		img[i] = (t_cell *)ft_memalloc(sizeof(t_cell) * fdf->w);
 		ft_memcpy(img[i], fdf->map[i], sizeof(t_cell) * fdf->w);
-		zoom(fdf, img[i], i, fdf->zoom);
+		zoom(fdf, img[i]);
 		j = 0;
 		while (j < fdf->w)
 		{

@@ -49,12 +49,18 @@ typedef struct		s_map
 	void			*mlx_ptr;
 	void			*win_ptr;
 
+	enum			e_projection
+	{
+		fdf_none,
+		fdf_iso
+	}				projection;
+
 	t_cell			**img;
-	double			zoom;
-	double			depth;
-	double			ox;
-	double			oy;
-	double			oz;
+	int				zoom;
+	int				depth;
+	int				ox;
+	int				oy;
+	int				oz;
 
 	char			*filename;
 }					t_map;
@@ -82,10 +88,10 @@ void		get_color(t_cell *cur, t_cell *start, t_cell *end, int delta);
 
 void		rotation(t_map *fdf);
 
-void		zoom(t_map *fdf, t_cell *img, int row, double zoom);
-void		rot_x(t_map *fdf, t_cell *img, double angl);
-void		rot_y(t_map *fdf, t_cell *img, double angl);
-void		rot_z(t_map *fdf, t_cell *img, double angl);
+void		zoom(t_map *fdf, t_cell *img);
+void		rot_x(t_map *fdf, t_cell *img);
+void		rot_y(t_map *fdf, t_cell *img);
+void		rot_z(t_map *fdf, t_cell *img);
 void		iso(t_map *fdf);
 
 /*

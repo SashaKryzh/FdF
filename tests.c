@@ -37,10 +37,10 @@ void	print_map(t_map *fdf, t_cell **map)
 
 void	print_rotation_info(t_map *fdf)
 {
-	printf("zoom: %f\n", fdf->zoom);
-	printf("depth: %f\n", fdf->depth);
-	printf("ox: %f (%d)\n", fdf->ox, fdf->ox == (float)0.0);
-	printf("oy: %f\n", fdf->oy);
-	printf("oz: %f\n", fdf->oz);
+	printf("zoom: %d\n", fdf->zoom);
+	printf("depth: %d\n", fdf->depth);
+	printf("ox: %d\n", fdf->ox);
+	printf("oy: %d\n", fdf->oy);
+	printf("oz: %d\n", fdf->oz);
 	printf("\n");
 }
