@@ -24,6 +24,7 @@ void	check_direction(bool *steep, t_cell *p1, t_cell *p2)
 	{
 		ft_swap(&p1->x, &p2->x);
 		ft_swap(&p1->y, &p2->y);
+		ft_swap(&p1->color, &p2->color);
 	}
 }
 
@@ -95,7 +96,5 @@ void		get_color(t_cell *cur, t_cell *start, t_cell *end, int delta)
 	{
 		printf("0x%X\n", cur->color);
 		printf("0x%X 0x%X\n", start->color, end->color);
-		
-		// printf("0x%X\n", cur->color);
 	}
 }
