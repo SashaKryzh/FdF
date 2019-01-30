@@ -42,6 +42,9 @@ void		manage_color(t_cell *line, char **token, int i)
 	line[i].color = ft_atoi_hex(&tab[1][2]);
 	if (line[i].color == 0 && tab[1][3] != '0')
 		exit_func(COLOR_ERROR);
+	free(tab[0]);
+	free(tab[1]);
+	free(tab);
 }
 
 t_cell		*manage_line(t_map *map, char *ln)

@@ -14,7 +14,6 @@
 
 void	zoom(t_map *fdf, t_cell *img)
 {
-	// double	zoom;
 	int		segm;
 	int		i;
 
@@ -85,29 +84,26 @@ void	rot_z(t_map *fdf, t_cell *img)
 
 void	iso(t_map *fdf)
 {
-	t_cell	**img;
 	int		i;
 	int		j;
 	int		prev_x;
 	int		prev_y;
 
-	img = (t_cell **)ft_memalloc(sizeof(t_cell *) * fdf->h);
 	i = 0;
 	while (i < fdf->h)
 	{
-		img[i] = (t_cell *)ft_memalloc(sizeof(t_cell) * fdf->w);
-		ft_memcpy(img[i], fdf->map[i], sizeof(t_cell) * fdf->w);
-		zoom(fdf, img[i]);
+		ft_memcpy(fdf->img[i], fdf->map[i], sizeof(t_cell) * fdf->w);
+		zoom(fdf, fdf->img[i]);
 		j = 0;
 		while (j < fdf->w)
 		{
-			prev_x = img[i][j].x;
-			prev_y = img[i][j].y;
-			img[i][j].x = (prev_x - prev_y) * cos(0.523599);
-			img[i][j].y = -1 * img[i][j].z + (prev_x + prev_y) * sin(0.523599);
+			prev_x = fdf->img[i][j].x;
+			prev_y = fdf->img[i][j].y;
+			fdf->img[i][j].x = (prev_x - prev_y) * cos(0.523599);
+			fdf->img[i][j].y = -1 * fdf->img[i][j].z + (prev_x + prev_y) * sin(0.523599);
 			j++;
 		}
 		i++;
 	}
-	draw_grid(fdf, img);
+	draw_map(fdf, fdf->img);
 }

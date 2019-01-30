@@ -45,3 +45,15 @@ int			ft_atoi_hex(char *s)
 	}
 	return (r);
 }
+
+void		put_bytes(char *s, char *v)
+{
+	int i;
+
+	i = 0;
+	while (i < 4)
+	{
+		s[i] = v[i];
+		i++;
+	}
+}

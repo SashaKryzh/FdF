@@ -28,6 +28,22 @@ void	check_direction(bool *steep, t_cell *p1, t_cell *p2)
 	}
 }
 
+void	fill_pixel(t_map *fdf, t_cell *cur, bool steep)
+{
+	int res;
+	int	x;
+	int	y;
+
+	x = cur->x + WIN_WIDTH / 2;
+	y = cur->y + WIN_HEIGHT / 2;
+	if (x < 0 || y < 0 || x >= WIN_WIDTH || y >= WIN_HEIGHT)
+		return ;
+	if (steep)
+		ft_swap(&x, &y);
+	res = y * fdf->size_line + x * fdf->bpp / 8;
+	put_bytes((char *)&fdf->img_p[res], (char *)&cur->color);
+}
+
 void	draw_line(t_map *fdf, t_cell p1, t_cell p2)
 {
 	bool	steep;
@@ -47,10 +63,7 @@ void	draw_line(t_map *fdf, t_cell p1, t_cell p2)
 	while (cur.x < p2.x)
 	{
 		get_color(&cur, &p1, &p2, dx > dy);
-		if (!steep)
-			mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, cur.x + WIN_WIDTH / 2, cur.y + WIN_HEIGHT / 2, cur.color);
-		else
-			mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, cur.y + WIN_WIDTH / 2, cur.x + WIN_HEIGHT / 2, cur.color);
+		fill_pixel(fdf, &cur, steep);
 		error += derror;
 		if (error > dx)
 		{
@@ -92,9 +105,4 @@ void		get_color(t_cell *cur, t_cell *start, t_cell *end, int delta)
     g = get_light((start->color >> 8) & 0xFF, (end->color >> 8) & 0xFF, per);
     b = get_light(start->color & 0xFF, end->color & 0xFF, per);
 	cur->color = (r << 16) | (g << 8) | b;
-	if (!cur->color)
-	{
-		printf("0x%X\n", cur->color);
-		printf("0x%X 0x%X\n", start->color, end->color);
-	}
 }

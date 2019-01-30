@@ -30,7 +30,6 @@
 
 # define WIN_WIDTH 700
 # define WIN_HEIGHT 700
-# define SEGM (WIN_HEIGHT / (fdf->w > fdf->h ? fdf->w : fdf->h) / 2)
 
 typedef struct		s_cell
 {
@@ -43,11 +42,18 @@ typedef struct		s_cell
 typedef struct		s_map
 {
 	t_cell			**map;
+	t_cell			**img;
 	int				w;
 	int				h;
 
 	void			*mlx_ptr;
 	void			*win_ptr;
+	void			*img_ptr;
+	
+	char			*img_p;
+	int				bpp;
+	int				size_line;
+	int				endian;
 
 	enum			e_projection
 	{
@@ -55,7 +61,6 @@ typedef struct		s_map
 		fdf_iso
 	}				projection;
 
-	t_cell			**img;
 	int				zoom;
 	int				depth;
 	int				ox;
@@ -78,7 +83,7 @@ void		get_map(t_map *map, int ac, char *av[]);
 */
 
 void		draw_line(t_map *fdf, t_cell p1, t_cell p2);
-void		draw_grid(t_map *fdf, t_cell **img);
+void		draw_map(t_map *fdf, t_cell **img);
 
 void		get_color(t_cell *cur, t_cell *start, t_cell *end, int delta);
 
@@ -99,6 +104,7 @@ void		iso(t_map *fdf);
 */
 
 void		exit_func(char *msg);
+void		put_bytes(char *s, char *v);
 int			ft_atoi_hex(char *s);
 int			line_width(char **token);
 
