@@ -41,7 +41,7 @@ void	fill_pixel(t_map *fdf, t_cell *cur, bool steep)
 	if (steep)
 		ft_swap(&x, &y);
 	res = y * fdf->size_line + x * fdf->bpp / 8;
-	put_bytes((char *)&fdf->img_p[res], (char *)&cur->color);
+	put_bytes((char *)&fdf->img_p[res], (char *)&cur->color, fdf->endian);
 }
 
 void	draw_line(t_map *fdf, t_cell p1, t_cell p2)

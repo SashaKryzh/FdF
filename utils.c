@@ -46,14 +46,17 @@ int			ft_atoi_hex(char *s)
 	return (r);
 }
 
-void		put_bytes(char *s, char *v)
+void		put_bytes(char *s, char *v, int endian)
 {
 	int i;
 
 	i = 0;
 	while (i < 4)
 	{
-		s[i] = v[i];
+		if (endian)
+			s[i] = v[3 - i];
+		else
+			s[i] = v[i];
 		i++;
 	}
 }

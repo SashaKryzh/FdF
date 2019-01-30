@@ -104,7 +104,7 @@ void		iso(t_map *fdf);
 */
 
 void		exit_func(char *msg);
-void		put_bytes(char *s, char *v);
+void		put_bytes(char *s, char *v, int endian);
 int			ft_atoi_hex(char *s);
 int			line_width(char **token);
 
