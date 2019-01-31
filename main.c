@@ -84,8 +84,10 @@ void	magic(t_map *fdf)
 	int		i;
 
 	fdf->mlx_ptr = mlx_init();
-	fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, fdf->filename);
-	fdf->img_ptr = mlx_new_image(fdf->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+	fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, WIN_WIDTH, WIN_HEIGHT,
+		fdf->filename);
+	show_usage(fdf);
+	fdf->img_ptr = mlx_new_image(fdf->mlx_ptr, IMG_WIDTH, IMG_HEIGHT);
 	fdf->img_p = mlx_get_data_addr(fdf->img_ptr, &fdf->bpp,
 		&fdf->size_line, &fdf->endian);
 	fdf->zoom = 1;
@@ -109,6 +111,7 @@ int		main(int ac, char *av[])
 	ft_bzero(&fdf, sizeof(t_map));
 	get_map(&fdf, ac, av);
 	// print_map(&fdf); //
+	printf("%d %d\n", fdf.h, fdf.w);
 	magic(&fdf);
 	return (0);
 }

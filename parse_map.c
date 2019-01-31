@@ -12,35 +12,18 @@
 
 #include "fdf.h"
 
-void		add_line(t_read **read, t_cell *line)
-{
-	t_read	*new;
-	t_read	*tmp;
-
-	new = (t_read *)ft_memalloc(sizeof(t_read));
-	new->l = line;
-	if (!*read)
-		*read = new;
-	else
-	{
-		tmp = *read;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = new;
-	}
-}
-
 void		manage_color(t_cell *line, char **token, int i)
 {
 	char **tab;
 
-	tab = ft_strsplit(token[i], ',');
+	if (!(tab = ft_strsplit(token[i], ',')))
+		exit_func(COLOR_ERROR);
 	if (line_width(tab) != 2)
 		exit_func(COLOR_ERROR);
 	if (!ft_strnequ(tab[1], "0x", 2))
 		exit_func(COLOR_ERROR);
 	line[i].color = ft_atoi_hex(&tab[1][2]);
-	if (line[i].color == 0 && tab[1][3] != '0')
+	if (line[i].color == 0 && tab[1][2] != '0')
 		exit_func(COLOR_ERROR);
 	free(tab[0]);
 	free(tab[1]);
@@ -58,11 +41,14 @@ t_cell		*manage_line(t_map *map, char *ln)
 	map->w = !map->w ? line_width(token) : map->w;
 	line = (t_cell *)ft_memalloc(sizeof(t_cell) * map->w);
 	i = 0;
-	while (map->w && token[i] && i < map->w)
+	while (map->w && token && token[i])
 	{
-		line[i].z = ft_atoi(token[i]);
-		if (ft_strchr(token[i], ','))
-			manage_color(line, token, i);
+		if (i < map->w)
+		{
+			line[i].z = ft_atoi(token[i]);
+			if (ft_strchr(token[i], ','))
+				manage_color(line, token, i);
+		}
 		free(token[i]);
 		i++;
 	}

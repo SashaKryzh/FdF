@@ -12,6 +12,24 @@
 
 #include "fdf.h"
 
+void		add_line(t_read **read, t_cell *line)
+{
+	t_read	*new;
+	t_read	*tmp;
+
+	new = (t_read *)ft_memalloc(sizeof(t_read));
+	new->l = line;
+	if (!*read)
+		*read = new;
+	else
+	{
+		tmp = *read;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = new;
+	}
+}
+
 int		line_width(char **token)
 {
 	int i;

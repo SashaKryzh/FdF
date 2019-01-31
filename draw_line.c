@@ -34,9 +34,9 @@ void	fill_pixel(t_map *fdf, t_cell *cur, bool steep)
 	int	x;
 	int	y;
 
-	x = cur->x + WIN_WIDTH / 2;
-	y = cur->y + WIN_HEIGHT / 2;
-	if (x < 0 || y < 0 || x >= WIN_WIDTH || y >= WIN_HEIGHT)
+	x = cur->x + IMG_WIDTH / 2;
+	y = cur->y + IMG_WIDTH / 2;
+	if (x < 0 || y < 0 || x >= IMG_WIDTH || y >= IMG_WIDTH)
 		return ;
 	if (steep)
 		ft_swap(&x, &y);

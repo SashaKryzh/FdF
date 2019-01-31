@@ -30,6 +30,7 @@ SRCS =	main.c \
 		draw_line.c \
 		draw_map.c \
 		utils.c \
+		show_usage.c \
 		rotation.c \
 		tests.c
 

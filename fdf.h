@@ -28,8 +28,11 @@
 # define MAP_ERROR "Map error"
 # define COLOR_ERROR "Color error"
 
-# define WIN_WIDTH 700
-# define WIN_HEIGHT 700
+# define WIN_WIDTH 1600
+# define WIN_HEIGHT 1200
+
+# define IMG_WIDTH 1200
+# define IMG_HEIGHT WIN_HEIGHT
 
 typedef struct		s_cell
 {
@@ -103,10 +106,25 @@ void		iso(t_map *fdf);
 **	Utils
 */
 
+void		add_line(t_read **read, t_cell *line);
 void		exit_func(char *msg);
 void		put_bytes(char *s, char *v, int endian);
 int			ft_atoi_hex(char *s);
 int			line_width(char **token);
+
+void		show_usage(t_map *fdf);
+
+# define ESC "Esc - Exit"
+
+# define ROT_OX "W / S or Arror Up / Down - OX"
+# define ROT_OY "A / D or Arror Left / Right - OY"
+# define ROT_OZ "[ / ] - OZ"
+
+# define ZOOM "+ / - Zoom"
+# define DEPTH "Right panel 0-9 - Depth"
+
+# define ISO "I - Isometric"
+# define RESET "R - Reset projection"
 
 /*
 **	Tests
