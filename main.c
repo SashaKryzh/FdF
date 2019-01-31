@@ -15,7 +15,6 @@
 void	exit_func(char *msg)
 {
 	perror(msg);
-	system("leaks fdf");
 	exit(1);
 }
 

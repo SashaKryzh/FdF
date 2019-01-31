@@ -41,7 +41,6 @@ int			key_hook(int key, void *param)
 	fdf = (t_map *)param;
 	if (key == 53)
 	{
-		system("leaks fdf");
 		exit(0);
 	}
 	if (key == 13 || key == 126 || key == 1 || key == 125)
