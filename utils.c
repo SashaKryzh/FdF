@@ -35,6 +35,8 @@ int			line_width(char **token)
 	int i;
 
 	i = 0;
+	if (!token)
+		exit_func("Line error");
 	while (token[i])
 		i++;
 	return (i);

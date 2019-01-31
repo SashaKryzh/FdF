@@ -13,7 +13,7 @@
 NAME = fdf
 
 FLAGS = -Wall -Wextra -Werror
-CC = gcc
+CC = gcc $(FLAGS)
 
 MLX_HEAD = /usr/local/include
 MLX_SRCS = -L /usr/local/lib -lmlx -framework OpenGL -framework AppKit
@@ -32,8 +32,7 @@ SRCS =	main.c \
 		keys.c \
 		utils.c \
 		show_usage.c \
-		rotation.c \
-		tests.c
+		rotation.c
 
 OBJS_D = ./objs
 OBJS = $(addprefix $(OBJS_D)/, $(SRCS:.c=.o))
@@ -44,16 +43,15 @@ $(LIBFT):
 	@$(MAKE) all -C $(LIB_D)
 
 $(OBJS_D): 
-	mkdir -p $(OBJS_D)
+	@mkdir -p $(OBJS_D)
 
 $(NAME): $(OBJS)
 	$(CC) -o $(NAME) $(SRCS) $(MLX_SRCS) $(LIB_SRCS) $(INCLS)
 
-$(OBJS_D)/%.o: %.c *.h libft/includes/*.h
+$(OBJS_D)/%.o: %.c *.h libft/includes/*.h $(MLX_HEAD)/*.h
 	$(CC) -o $@ -c $< $(INCLS)
 
 clean:
-	@$(MAKE) clean -C $(LIB_D)
 	@rm -rf $(OBJS_D)
 
 fclean: clean
