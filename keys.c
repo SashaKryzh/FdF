@@ -24,6 +24,14 @@ static void	check_keys(int key, t_map *fdf)
 	}
 	else if (key == 34)
 		fdf->projection = fdf_iso;
+	else if (key == 27 || key == 78 || key == 24 || key == 69)
+	{
+		if (fdf->zoom == -1 * fdf->segm / 2 && (key == 27 || key == 78))
+			return ;
+		fdf->zoom += key == 27 || key == 78 ? -1 : 1;
+		if (!fdf->zoom)
+			fdf->zoom = key == 27 || key == 78 ? -1 : 1;
+	}
 }
 
 int			key_hook(int key, void *param)
@@ -31,7 +39,7 @@ int			key_hook(int key, void *param)
 	t_map *fdf;
 
 	fdf = (t_map *)param;
-	if (key == 53 || key == 12)
+	if (key == 53)
 	{
 		system("leaks fdf");
 		exit(0);
@@ -42,12 +50,6 @@ int			key_hook(int key, void *param)
 		fdf->oy += key == 0 || key == 123 ? -1 : 1;
 	else if (key == 33 || key == 30)
 		fdf->oz += key == 33 ? -1 : 1;
-	else if (key == 27 || key == 78 || key == 24 || key == 69)
-	{
-		fdf->zoom += key == 27 || key == 78 ? -1 : 1;
-		if (!fdf->zoom)
-			fdf->zoom = key == 27 || key == 78 ? -1 : 1;
-	}
 	else if (key >= 82 && key <= 92)
 		fdf->depth = key - 82;
 	else

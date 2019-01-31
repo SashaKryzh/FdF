@@ -61,7 +61,7 @@ void	magic(t_map *fdf)
 		fdf->img[i] = (t_cell *)ft_memalloc(sizeof(t_cell) * fdf->w);
 		i++;
 	}
-	fdf->segm = (IMG_WIDTH - 200) / (fdf->w > fdf->h ? fdf->w : fdf->h);
+	fdf->segm = (IMG_WIDTH / 2) / (fdf->w > fdf->h ? fdf->w : fdf->h);
 	rotation(fdf);
 	mlx_hook(fdf->win_ptr, 2, 5, key_hook, (void *)fdf);
 	mlx_loop(fdf->mlx_ptr);

@@ -53,6 +53,7 @@ $(OBJS_D)/%.o: %.c *.h libft/includes/*.h
 	$(CC) -o $@ -c $< $(INCLS)
 
 clean:
+	@$(MAKE) clean -C $(LIB_D)
 	@rm -rf $(OBJS_D)
 
 fclean: clean

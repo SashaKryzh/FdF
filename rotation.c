@@ -27,7 +27,9 @@ void	zoom(t_map *fdf, t_cell *img)
 	{
 		img[i].x = img[i].x * segm - (fdf->w - 1) * segm / 2;
 		img[i].y = img[i].y * segm - (fdf->h - 1) * segm / 2;
-		img[i].z = img[i].z * segm * ((double)fdf->depth / (double)fdf->z_max);
+		if (fdf->z_max)
+			img[i].z = img[i].z * segm *
+				((double)fdf->depth / (double)fdf->z_max);
 		i++;
 	}
 }

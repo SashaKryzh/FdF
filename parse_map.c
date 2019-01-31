@@ -76,8 +76,8 @@ void		convert_map(t_map *map, t_read *read)
 			map->map[i][j].y = i;
 			if (!map->map[i][j].color)
 				map->map[i][j].color = 0xFFFFFF;
-			if (map->map[i][j].z > map->z_max)
-				map->z_max = map->map[i][j].z;
+			if (ft_abs(map->map[i][j].z) > map->z_max)
+				map->z_max = ft_abs(map->map[i][j].z);
 			j++;
 		}
 		tmp = read;
