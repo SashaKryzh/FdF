@@ -18,44 +18,6 @@ void	exit_func(char *msg)
 	exit(1);
 }
 
-int		key_hook(int key, void *param)
-{
-	t_map *fdf;
-
-	fdf = (t_map *)param;
-	if (key == 53 || key == 12)
-	{
-		system("leaks fdf");
-		exit(0);
-	}
-	if (key == 13 || key == 126 || key == 1 || key == 125)
-		fdf->ox += key == 1 || key == 125 ? 1 : -1;
-	else if (key == 0 || key == 123 || key == 2 || key == 124)
-		fdf->oy += key == 0 || key == 123 ? -1 : 1;
-	else if (key == 33 || key == 30)
-		fdf->oz += key == 33 ? -1 : 1;
-	else if (key == 27 || key == 78 || key == 24 || key == 69)
-	{
-		fdf->zoom += key == 27 || key == 78 ? -1 : 1;
-		if (!fdf->zoom)
-			fdf->zoom = key == 27 || key == 78 ? -1 : 1;
-	}
-	else if (key >= 82 && key <= 92)
-		fdf->depth = key - 82;
-	else if (key == 15)
-	{
-		fdf->zoom = 1;
-		fdf->projection = fdf_none;
-		fdf->ox = 0;
-		fdf->oy = 0;
-		fdf->oz = 0;
-	}
-	else if (key == 34)
-		fdf->projection = fdf_iso;
-	rotation(fdf);
-	return (0);
-}
-
 void	rotation(t_map *fdf)
 {
 	int		i;
@@ -99,6 +61,7 @@ void	magic(t_map *fdf)
 		fdf->img[i] = (t_cell *)ft_memalloc(sizeof(t_cell) * fdf->w);
 		i++;
 	}
+	fdf->segm = (IMG_WIDTH - 200) / (fdf->w > fdf->h ? fdf->w : fdf->h);
 	rotation(fdf);
 	mlx_hook(fdf->win_ptr, 2, 5, key_hook, (void *)fdf);
 	mlx_loop(fdf->mlx_ptr);
@@ -110,8 +73,6 @@ int		main(int ac, char *av[])
 
 	ft_bzero(&fdf, sizeof(t_map));
 	get_map(&fdf, ac, av);
-	// print_map(&fdf); //
-	printf("%d %d\n", fdf.h, fdf.w);
 	magic(&fdf);
 	return (0);
 }

@@ -43,9 +43,9 @@ void	draw_map(t_map *fdf, t_cell **img)
 		while (j < fdf->w)
 		{
 			if (j < fdf->w - 1)
-				draw_line(fdf, img[i][j], img[i][j + 1]);
+				draw_line(fdf, img[i][j], img[i][j + 1], img[i][j]);
 			if (i < fdf->h - 1)
-				draw_line(fdf, img[i][j], img[i + 1][j]);
+				draw_line(fdf, img[i][j], img[i + 1][j], img[i][j]);
 			j++;
 		}
 		i++;

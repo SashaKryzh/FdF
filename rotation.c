@@ -17,16 +17,17 @@ void	zoom(t_map *fdf, t_cell *img)
 	int		segm;
 	int		i;
 
+	segm = fdf->segm;
 	if (fdf->zoom > 0)
-		segm = 35 * fdf->zoom;
+		segm = segm * fdf->zoom;
 	else
-		segm = 35 / (fdf->zoom * -1);
+		segm = segm / (fdf->zoom * -1);
 	i = 0;
 	while (i < fdf->w)
 	{
 		img[i].x = img[i].x * segm - (fdf->w - 1) * segm / 2;
 		img[i].y = img[i].y * segm - (fdf->h - 1) * segm / 2;
-		img[i].z = img[i].z * fdf->depth;
+		img[i].z = img[i].z * segm * ((double)fdf->depth / (double)fdf->z_max);
 		i++;
 	}
 }
@@ -100,7 +101,8 @@ void	iso(t_map *fdf)
 			prev_x = fdf->img[i][j].x;
 			prev_y = fdf->img[i][j].y;
 			fdf->img[i][j].x = (prev_x - prev_y) * cos(0.523599);
-			fdf->img[i][j].y = -1 * fdf->img[i][j].z + (prev_x + prev_y) * sin(0.523599);
+			fdf->img[i][j].y = -1 * fdf->img[i][j].z +
+				(prev_x + prev_y) * sin(0.523599);
 			j++;
 		}
 		i++;

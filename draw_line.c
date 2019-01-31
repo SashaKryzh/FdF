@@ -12,23 +12,7 @@
 
 #include "fdf.h"
 
-void	check_direction(bool *steep, t_cell *p1, t_cell *p2)
-{
-	if (ft_abs(p1->x - p2->x) < ft_abs(p1->y - p2->y))
-	{
-		ft_swap(&p1->x, &p1->y);
-		ft_swap(&p2->x, &p2->y);
-		*steep = true;
-	}
-	if (p1->x > p2->x)
-	{
-		ft_swap(&p1->x, &p2->x);
-		ft_swap(&p1->y, &p2->y);
-		ft_swap(&p1->color, &p2->color);
-	}
-}
-
-void	fill_pixel(t_map *fdf, t_cell *cur, bool steep)
+static void				fill_pixel(t_map *fdf, t_cell *cur, bool steep)
 {
 	int res;
 	int	x;
@@ -44,14 +28,13 @@ void	fill_pixel(t_map *fdf, t_cell *cur, bool steep)
 	put_bytes((char *)&fdf->img_p[res], (char *)&cur->color, fdf->endian);
 }
 
-void	draw_line(t_map *fdf, t_cell p1, t_cell p2)
+void					draw_line(t_map *fdf, t_cell p1, t_cell p2, t_cell cur)
 {
 	bool	steep;
 	int		dx;
 	int		dy;
 	int		derror;
 	int		error;
-	t_cell	cur;
 
 	steep = false;
 	check_direction(&steep, &p1, &p2);
@@ -68,13 +51,13 @@ void	draw_line(t_map *fdf, t_cell p1, t_cell p2)
 		if (error > dx)
 		{
 			cur.y += p2.y > cur.y ? 1 : -1;
-			error -= dx * 2; 
+			error -= dx * 2;
 		}
 		cur.x++;
 	}
 }
 
-double	get_percentage(int start, int end, int cur)
+inline static double	get_percentage(int start, int end, int cur)
 {
 	double place;
 	double dist;
@@ -84,11 +67,13 @@ double	get_percentage(int start, int end, int cur)
 	return (dist == 0 ? 1.0 : (place / dist));
 }
 
-int			get_light(int start, int end, double percentage)
+inline static int		get_light(int start, int end, double percentage)
 {
 	return ((int)((1 - percentage) * start + percentage * end));
 }
-void		get_color(t_cell *cur, t_cell *start, t_cell *end, int delta)
+
+void					get_color(t_cell *cur, t_cell *start,
+	t_cell *end, int delta)
 {
 	double	per;
 	int		r;
@@ -102,7 +87,7 @@ void		get_color(t_cell *cur, t_cell *start, t_cell *end, int delta)
 	else
 		per = get_percentage(start->y, end->y, cur->y);
 	r = get_light((start->color >> 16) & 0xFF, (end->color >> 16) & 0xFF, per);
-    g = get_light((start->color >> 8) & 0xFF, (end->color >> 8) & 0xFF, per);
-    b = get_light(start->color & 0xFF, end->color & 0xFF, per);
+	g = get_light((start->color >> 8) & 0xFF, (end->color >> 8) & 0xFF, per);
+	b = get_light(start->color & 0xFF, end->color & 0xFF, per);
 	cur->color = (r << 16) | (g << 8) | b;
 }

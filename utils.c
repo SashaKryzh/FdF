@@ -30,7 +30,7 @@ void		add_line(t_read **read, t_cell *line)
 	}
 }
 
-int		line_width(char **token)
+int			line_width(char **token)
 {
 	int i;
 
@@ -76,5 +76,21 @@ void		put_bytes(char *s, char *v, int endian)
 		else
 			s[i] = v[i];
 		i++;
+	}
+}
+
+void		check_direction(bool *steep, t_cell *p1, t_cell *p2)
+{
+	if (ft_abs(p1->x - p2->x) < ft_abs(p1->y - p2->y))
+	{
+		ft_swap(&p1->x, &p1->y);
+		ft_swap(&p2->x, &p2->y);
+		*steep = true;
+	}
+	if (p1->x > p2->x)
+	{
+		ft_swap(&p1->x, &p2->x);
+		ft_swap(&p1->y, &p2->y);
+		ft_swap(&p1->color, &p2->color);
 	}
 }

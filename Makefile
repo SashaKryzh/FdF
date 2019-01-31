@@ -29,6 +29,7 @@ SRCS =	main.c \
 		parse_map.c \
 		draw_line.c \
 		draw_map.c \
+		keys.c \
 		utils.c \
 		show_usage.c \
 		rotation.c \

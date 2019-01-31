@@ -27,7 +27,7 @@ static void		line(t_map *fdf)
 	}
 }
 
-void	show_usage(t_map *fdf)
+void			show_usage(t_map *fdf)
 {
 	line(fdf);
 	mlx_string_put(MLX_WIN, IMG_WIDTH + 15, 25, 0xFFFFFF, ESC);
