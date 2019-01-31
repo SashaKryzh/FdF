@@ -60,7 +60,7 @@ void	draw_line(t_map *fdf, t_cell p1, t_cell p2)
 	dy = p2.y - cur.y;
 	derror = ft_abs(dy) * 2;
 	error = 0;
-	while (cur.x < p2.x)
+	while (cur.x <= p2.x)
 	{
 		get_color(&cur, &p1, &p2, dx > dy);
 		fill_pixel(fdf, &cur, steep);
